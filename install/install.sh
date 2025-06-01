@@ -14,9 +14,6 @@ BASHRC="$HOME/.bashrc"
 echo "🔧 Installation d'Oh My Posh via le script officiel..."
 curl -s https://ohmyposh.dev/install.sh | bash -s
 
-echo "🔤 Installation de la police Meslo..."
-eval "\$(oh-my-posh font install meslo)"
-
 echo "📁 Création du dossier de thème personnel..."
 mkdir -p "$THEME_DIR"
 
