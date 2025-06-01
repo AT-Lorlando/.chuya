@@ -15,19 +15,19 @@ echo "🔧 Installation d'Oh My Posh via le script officiel..."
 curl -s https://ohmyposh.dev/install.sh | bash -s
 
 echo "🔤 Installation de la police Meslo..."
-oh-my-posh font install meslo
+eval "$(oh-my-posh font install meslo)"
 
 echo "📁 Création du dossier de thème personnel..."
 mkdir -p "$THEME_DIR"
 
-echo("🌐 Téléchargement du thème personnalisé..."
+echo "🌐 Téléchargement du thème personnalisé..."
 curl -sSL "$THEME_URL" -o "$THEME_PATH" || {
   echo "⚠️ Échec du téléchargement du thème, utilisation du thème par défaut"
   oh-my-posh get shell bash
   cp "$(oh-my-posh get shell bash | grep -oP '"config":\s*"\K[^"]+')" "$THEME_PATH"
 }
 
-echo("⚙️ Configuration du .bashrc..."
+echo "⚙️ Configuration du .bashrc..."
 if ! grep -q "oh-my-posh" "$BASHRC"; then
   cat <<EOF >> "$BASHRC"
 
