@@ -14,7 +14,7 @@ ZSHRC="$HOME/.zshrc"
 # 1. Installer Oh My Zsh
 if [ ! -d "$HOME/.oh-my-zsh" ]; then
   echo "🔧 Installation d'Oh My Zsh..."
-  sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+  curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh | bash -s
 else
   echo "ℹ️ Oh My Zsh déjà installé."
 fi
