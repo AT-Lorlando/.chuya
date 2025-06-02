@@ -11,10 +11,32 @@ THEME_DIR="$HOME/.chuya/oh-my-posh"
 THEME_PATH="$THEME_DIR/chuya.omp.json"
 ZSHRC="$HOME/.zshrc"
 
+# 0. Installer Zsh si nécessaire
+if ! command -v zsh >/dev/null 2>&1; then
+  echo "🔧 Zsh n'est pas installé. Installation en cours..."
+  if [ -x "$(command -v apt)" ]; then
+    sudo apt update && sudo apt install -y zsh
+  elif [ -x "$(command -v dnf)" ]; then
+    sudo dnf install -y zsh
+  elif [ -x "$(command -v yum)" ]; then
+    sudo yum install -y zsh
+  elif [ -x "$(command -v pacman)" ]; then
+    sudo pacman -Sy --noconfirm zsh
+  elif [ -x "$(command -v zypper)" ]; then
+    sudo zypper install -y zsh
+  elif [ -x "$(command -v brew)" ]; then
+    brew install zsh
+  else
+    echo "❌ Impossible d'installer zsh automatiquement. Installe-le manuellement."
+    exit 1
+  fi
+else
+  echo "ℹ️ Zsh est déjà installé."
+fi
+
 # 1. Installer Oh My Zsh
 if [ ! -d "$HOME/.oh-my-zsh" ]; then
   echo "🔧 Installation d'Oh My Zsh..."
-  apt install zsh -y
   curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh | bash -s
 else
   echo "ℹ️ Oh My Zsh déjà installé."
