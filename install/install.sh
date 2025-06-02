@@ -26,12 +26,8 @@ if ! command -v git >/dev/null 2>&1; then
 fi
 
 # 1. Installer Oh My Zsh
-if [ ! -d "$HOME/.oh-my-zsh" ]; then
-  echo "🔧 Installation d'Oh My Zsh..."
-  curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh | bash -s
-else
-  echo "ℹ️ Oh My Zsh déjà installé."
-fi
+echo "🔧 Installation d'Oh My Zsh..."
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 
 # 2. Installer les plugins Zsh
 ZSH_CUSTOM="$HOME/.oh-my-zsh/custom"
@@ -75,9 +71,5 @@ fi
 if ! grep -q 'zsh-syntax-highlighting.zsh' "$ZSHRC"; then
   echo "source \$ZSH/custom/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" >> "$ZSHRC"
 fi
-
-# 7. Recharger la config Zsh
-echo "🔄 Rechargement de la configuration Zsh..."
-source "$ZSHRC"
 
 echo "🎉 Installation terminée !"
