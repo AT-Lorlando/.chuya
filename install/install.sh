@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Script d'installation simplifié pour Oh My Posh
-# Usage : curl -sSL https://raw.githubusercontent.com/monprofile/repo/main/install-chuya-posh.sh | bash
+# Usage : curl -sSL https://raw.githubusercontent.com/AT-Lorlando/.chuya/main/install/install.sh | bash
 
 set -e  # Quitte en cas d'erreur
 
@@ -40,7 +40,3 @@ else
 fi
 
 echo "🎉 Installation terminée !"
-echo "Pour appliquer les changements :"
-echo "1. Configurez MesloLGM Nerd Font dans votre terminal"
-echo "2. Exécutez : source ~/.bashrc"
-echo "3. Ou redémarrez votre terminal"
