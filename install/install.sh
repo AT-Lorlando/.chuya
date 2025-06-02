@@ -14,24 +14,15 @@ ZSHRC="$HOME/.zshrc"
 # 0. Installer Zsh si nécessaire
 if ! command -v zsh >/dev/null 2>&1; then
   echo "🔧 Zsh n'est pas installé. Installation en cours..."
-  if [ -x "$(command -v apt)" ]; then
-    sudo apt update && sudo apt install -y zsh
-  elif [ -x "$(command -v dnf)" ]; then
-    sudo dnf install -y zsh
-  elif [ -x "$(command -v yum)" ]; then
-    sudo yum install -y zsh
-  elif [ -x "$(command -v pacman)" ]; then
-    sudo pacman -Sy --noconfirm zsh
-  elif [ -x "$(command -v zypper)" ]; then
-    sudo zypper install -y zsh
-  elif [ -x "$(command -v brew)" ]; then
-    brew install zsh
-  else
-    echo "❌ Impossible d'installer zsh automatiquement. Installe-le manuellement."
-    exit 1
-  fi
+  sudo apt update && sudo apt install -y zsh
 else
   echo "ℹ️ Zsh est déjà installé."
+fi
+
+# 1. Install git if not installed
+if ! command -v git >/dev/null 2>&1; then
+  echo "🔧 Git n'est pas installé. Installation en cours..."
+  sudo apt install -y git
 fi
 
 # 1. Installer Oh My Zsh
@@ -79,7 +70,7 @@ fi
 
 # Ajouter la config Oh My Posh et le source du plugin syntax-highlighting si pas déjà présent
 if ! grep -q 'oh-my-posh init zsh' "$ZSHRC"; then
-  echo "\neval \"\$(/home/chuya/.local/bin/oh-my-posh init zsh --config '/home/chuya/.chuya/oh-my-posh/chuya.omp.json')\"" >> "$ZSHRC"
+  echo "eval \"\$(/home/chuya/.local/bin/oh-my-posh init zsh --config '/home/chuya/.chuya/oh-my-posh/chuya.omp.json')\"" >> "$ZSHRC"
 fi
 if ! grep -q 'zsh-syntax-highlighting.zsh' "$ZSHRC"; then
   echo "source \$ZSH/custom/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" >> "$ZSHRC"
