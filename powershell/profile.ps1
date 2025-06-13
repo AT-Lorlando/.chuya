@@ -15,7 +15,7 @@ if ($isAIAgent) {
     
     if (Get-Command oh-my-posh -ErrorAction SilentlyContinue) {
         try {
-            oh-my-posh init pwsh --config 'C:\Users\rcdje\.chuya\oh-my-posh\pure.omp.json' | Invoke-Expression
+            oh-my-posh init pwsh --config '~\.chuya\oh-my-posh\pure.omp.json' | Invoke-Expression
         } catch {
             function prompt { "PS $($pwd.Path.Split('\')[-1])> " }
         }
@@ -24,7 +24,7 @@ if ($isAIAgent) {
     }
 } else {
     if (Get-Command oh-my-posh -ErrorAction SilentlyContinue) {
-        oh-my-posh init pwsh --config 'C:\Users\rcdje\.chuya\oh-my-posh\chuya.omp.json' | Invoke-Expression
+        oh-my-posh init pwsh --config '~\.chuya\oh-my-posh\chuya.omp.json' | Invoke-Expression
     }
 
     if (Get-Command PSReadLine -ErrorAction SilentlyContinue) {
@@ -58,7 +58,7 @@ if ($isAIAgent) {
 
     function p {
         param([string]$prf)
-        $path = "C:\Users\rcdje\.chuya\oh-my-posh\$prf.omp.json"
+        $path = "~\.chuya\oh-my-posh\$prf.omp.json"
         if (Test-Path $path) {
             oh-my-posh init pwsh --config $path | Invoke-Expression
         } else {
