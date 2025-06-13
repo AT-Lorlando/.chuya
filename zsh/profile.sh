@@ -1,5 +1,11 @@
 #!/bin/zsh
 
+# Prevent multiple executions of this profile
+if [ -n "$CHUYA_PROFILE_LOADED" ]; then
+    return
+fi
+export CHUYA_PROFILE_LOADED=1
+
 # Add oh-my-posh to PATH if it exists in common locations
 if [ -f "$HOME/.local/bin/oh-my-posh" ] && [[ ":$PATH:" != *":$HOME/.local/bin:"* ]]; then
     export PATH="$HOME/.local/bin:$PATH"
@@ -31,10 +37,11 @@ if [ "$isAIAgent" = true ]; then
         omp_cmd="$HOME/.local/bin/oh-my-posh"
     fi
     
-    if [ -n "$omp_cmd" ] && [ -f "$HOME/.chuya/oh-my-posh/pure.omp.json" ]; then
+    if [ -n "$omp_cmd" ] && [ -f "$HOME/.chuya/oh-my-posh/pure.omp.json" ] && [ -z "$_OMP_INITIALIZED" ]; then
         # Use absolute path to avoid path resolution issues
         pure_config="$HOME/.chuya/oh-my-posh/pure.omp.json"
         eval "$($omp_cmd init zsh --config \"$pure_config\")"
+        export _OMP_INITIALIZED=1
     else
         # Fallback simple prompt
         PROMPT='%1~ %# '
@@ -49,10 +56,11 @@ else
         omp_cmd="$HOME/.local/bin/oh-my-posh"
     fi
     
-    if [ -n "$omp_cmd" ] && [ -f "$HOME/.chuya/oh-my-posh/chuya.omp.json" ]; then
+    if [ -n "$omp_cmd" ] && [ -f "$HOME/.chuya/oh-my-posh/chuya.omp.json" ] && [ -z "$_OMP_INITIALIZED" ]; then
         # Use absolute path to avoid path resolution issues
         chuya_config="$HOME/.chuya/oh-my-posh/chuya.omp.json"
         eval "$($omp_cmd init zsh --config \"$chuya_config\")"
+        export _OMP_INITIALIZED=1
     fi
 
     # Set up zsh autocompletion and history
@@ -114,6 +122,7 @@ else
         if [ -f "$config_path" ]; then
             # Use absolute path to avoid path resolution issues
             eval "$($omp_cmd init zsh --config \"$config_path\")"
+            export _OMP_INITIALIZED=1
             echo "✅ Switched to theme: $prf"
         else
             echo "❌ Profile '$prf' not found at $config_path"
