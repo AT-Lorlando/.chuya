@@ -28,19 +28,10 @@ if [ "$isAIAgent" = true ]; then
     # AI Agent mode - simplified setup
     # Disable colors for plain text output
     export TERM=xterm
-    
-    # Find oh-my-posh command
-    local omp_cmd=""
-    if command -v oh-my-posh >/dev/null 2>&1; then
-        omp_cmd="oh-my-posh"
-    elif [ -f "$HOME/.local/bin/oh-my-posh" ]; then
-        omp_cmd="$HOME/.local/bin/oh-my-posh"
-    fi
-    
-    if [ -n "$omp_cmd" ] && [ -f "$HOME/.chuya/oh-my-posh/pure.omp.json" ] && [ -z "$_OMP_INITIALIZED" ]; then
-        # Use absolute path to avoid path resolution issues
-        pure_config="$HOME/.chuya/oh-my-posh/pure.omp.json"
-        eval "$($omp_cmd init zsh --config \"$pure_config\")"
+
+
+    if [ -f "$HOME/.chuya/oh-my-posh/pure.omp.json" ] && [ -z "$_OMP_INITIALIZED" ]; then
+        eval "$(oh-my-posh init zsh --config '~/.chuya/oh-my-posh/pure.omp.json')"
         export _OMP_INITIALIZED=1
     else
         # Fallback simple prompt
@@ -48,18 +39,8 @@ if [ "$isAIAgent" = true ]; then
     fi
 else
     # Regular interactive mode
-    # Find oh-my-posh command
-    local omp_cmd=""
-    if command -v oh-my-posh >/dev/null 2>&1; then
-        omp_cmd="oh-my-posh"
-    elif [ -f "$HOME/.local/bin/oh-my-posh" ]; then
-        omp_cmd="$HOME/.local/bin/oh-my-posh"
-    fi
-    
-    if [ -n "$omp_cmd" ] && [ -f "$HOME/.chuya/oh-my-posh/chuya.omp.json" ] && [ -z "$_OMP_INITIALIZED" ]; then
-        # Use absolute path to avoid path resolution issues
-        chuya_config="$HOME/.chuya/oh-my-posh/chuya.omp.json"
-        eval "$($omp_cmd init zsh --config \"$chuya_config\")"
+    if [ -f "$HOME/.chuya/oh-my-posh/chuya.omp.json" ] && [ -z "$_OMP_INITIALIZED" ]; then
+        eval "$(oh-my-posh init zsh --config '~/.chuya/oh-my-posh/chuya.omp.json')"
         export _OMP_INITIALIZED=1
     fi
 
@@ -97,18 +78,7 @@ else
     function p() {
         local prf="$1"
         local config_path="$HOME/.chuya/oh-my-posh/${prf}.omp.json"
-        
-        # Find oh-my-posh command
-        local omp_cmd=""
-        if command -v oh-my-posh >/dev/null 2>&1; then
-            omp_cmd="oh-my-posh"
-        elif [ -f "$HOME/.local/bin/oh-my-posh" ]; then
-            omp_cmd="$HOME/.local/bin/oh-my-posh"
-        else
-            echo "❌ oh-my-posh not found. Please install it first."
-            return 1
-        fi
-        
+
         if [ -z "$prf" ]; then
             echo "Available profiles:"
             for theme in "$HOME/.chuya/oh-my-posh"/*.omp.json; do
@@ -118,12 +88,11 @@ else
             done
             return
         fi
-        
+
         if [ -f "$config_path" ]; then
-            # Use absolute path to avoid path resolution issues
-            eval "$($omp_cmd init zsh --config \"$config_path\")"
+            echo "eval \"\$(oh-my-posh init zsh --config '$config_path')\""
             export _OMP_INITIALIZED=1
-            echo "✅ Switched to theme: $prf"
+            echo "✅ Put this command Switched to theme: $prf"
         else
             echo "❌ Profile '$prf' not found at $config_path"
             echo "Available profiles:"
@@ -155,7 +124,7 @@ else
     alias grep='grep --color=auto'
     alias fgrep='fgrep --color=auto'
     alias egrep='egrep --color=auto'
-    
+
     # Git aliases
     alias gs='git status'
     alias ga='git add'
