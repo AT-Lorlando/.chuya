@@ -32,7 +32,9 @@ if [ "$isAIAgent" = true ]; then
     fi
     
     if [ -n "$omp_cmd" ] && [ -f "$HOME/.chuya/oh-my-posh/pure.omp.json" ]; then
-        eval "$($omp_cmd init zsh --config '$HOME/.chuya/oh-my-posh/pure.omp.json')"
+        # Use absolute path to avoid path resolution issues
+        pure_config="$HOME/.chuya/oh-my-posh/pure.omp.json"
+        eval "$($omp_cmd init zsh --config \"$pure_config\")"
     else
         # Fallback simple prompt
         PROMPT='%1~ %# '
@@ -48,7 +50,9 @@ else
     fi
     
     if [ -n "$omp_cmd" ] && [ -f "$HOME/.chuya/oh-my-posh/chuya.omp.json" ]; then
-        eval "$($omp_cmd init zsh --config '$HOME/.chuya/oh-my-posh/chuya.omp.json')"
+        # Use absolute path to avoid path resolution issues
+        chuya_config="$HOME/.chuya/oh-my-posh/chuya.omp.json"
+        eval "$($omp_cmd init zsh --config \"$chuya_config\")"
     fi
 
     # Set up zsh autocompletion and history
@@ -108,7 +112,8 @@ else
         fi
         
         if [ -f "$config_path" ]; then
-            eval "$($omp_cmd init zsh --config '$config_path')"
+            # Use absolute path to avoid path resolution issues
+            eval "$($omp_cmd init zsh --config \"$config_path\")"
             echo "✅ Switched to theme: $prf"
         else
             echo "❌ Profile '$prf' not found at $config_path"
