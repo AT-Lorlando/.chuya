@@ -27,12 +27,10 @@ if ($isAIAgent) {
         oh-my-posh init pwsh --config '~\.chuya\oh-my-posh\chuya.omp.json' | Invoke-Expression
     }
 
-    if (Get-Command PSReadLine -ErrorAction SilentlyContinue) {
-        Import-Module PSReadLine
-        Set-PSReadLineOption -PredictionSource HistoryAndPlugin
-        Set-PSReadLineOption -PredictionViewStyle ListView
-        Set-PSReadLineKeyHandler -Key Tab -Function Complete
-    }
+    Import-Module PSReadLine
+    Set-PSReadLineOption -PredictionSource HistoryAndPlugin
+    Set-PSReadLineOption -PredictionViewStyle ListView
+    Set-PSReadLineKeyHandler -Key Tab -Function Complete
     
     function bash {
         & "C:\Program Files\Git\bin\bash.exe" --login -i
