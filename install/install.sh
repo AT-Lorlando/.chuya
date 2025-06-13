@@ -13,7 +13,11 @@ echo "2. Manual Download (Standalone installation)"
 echo ""
 
 while true; do
-    read -p "Enter your choice (1 or 2): " choice
+    if [[ -t 0 ]]; then
+        read -p "Enter your choice (1 or 2): " choice
+    else
+        read -p "Enter your choice (1 or 2): " choice < /dev/tty
+    fi
     case $choice in
         1|2) break;;
         *) echo "Please enter 1 or 2";;
@@ -127,10 +131,10 @@ else
     
     # Download and create the profile.sh file
     echo "📄 Downloading profile.sh..."
-    if curl -sSL "https://raw.githubusercontent.com/AT-Lorlando/.chuya/main/shell/profile.sh" -o "$PROFILE_SOURCE_PATH"; then
+    if curl -sSL "https://raw.githubusercontent.com/AT-Lorlando/.chuya/main/zsh/profile.sh" -o "$PROFILE_SOURCE_PATH"; then
         echo "✅ Profile downloaded successfully"
     else
-        echo "⚠️ Failed to download profile.sh, creating basic configuration..."
+        echo "⚠️ Failed to download profile.sh"
     fi
     
     # Add source line to shell config
