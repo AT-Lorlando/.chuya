@@ -1,51 +1,61 @@
 {
-    "$schema": "https://raw.githubusercontent.com/JanDeDobbeleer/oh-my-posh/main/themes/schema.json",
-    "version": 2,
-    "blocks": [{
-            "type": "prompt",
-            "alignment": "left",
-            "segments": [{
-                    "type": "session",
-                    "style": "plain",
-                    "foreground": "#007ACC",
-                    "template": "{{ .UserName }} "
-                },
-                {
-                    "type": "path",
-                    "style": "plain",
-                    "foreground": "#91DDC2",
-                    "properties": {
-                        "style": "short"
-                    },
-                    "template": "{{ .Path }} "
-                },
-                {
-                    "type": "git",
-                    "style": "plain",
-                    "foreground": "#FF6B6B",
-                    "properties": {
-                        "fetch_status": false
-                    },
-                    "template": "{{ .HEAD }} "
-                }
-            ]
+  "$schema": "https://raw.githubusercontent.com/JanDeDobbeleer/oh-my-posh/main/themes/schema.json",
+  "blocks": [
+    {
+      "type": "prompt",
+      "alignment": "left",
+      "segments": [
+        {
+          "properties": {
+            "cache_duration": "none"
+          },
+          "template": "{{ .UserName }} ",
+          "foreground": "#007ACC",
+          "type": "session",
+          "style": "plain"
         },
         {
-            "type": "prompt",
-            "alignment": "left",
-            "newline": true,
-            "segments": [{
-                "type": "status",
-                "style": "plain",
-                "foreground": "#4CAF50",
-                "foreground_templates": [
-                    "{{ if gt .Code 0 }}#F44336{{ end }}"
-                ],
-                "properties": {
-                    "always_enabled": true
-                },
-                "template": "❯ "
-            }]
+          "properties": {
+            "cache_duration": "none",
+            "style": "short"
+          },
+          "template": "{{ .Path }} ",
+          "foreground": "#91DDC2",
+          "type": "path",
+          "style": "plain"
+        },
+        {
+          "properties": {
+            "cache_duration": "none",
+            "fetch_status": false
+          },
+          "template": "{{ .HEAD }} ",
+          "foreground": "#FF6B6B",
+          "type": "git",
+          "style": "plain"
         }
-    ]
+      ]
+    },
+    {
+      "type": "prompt",
+      "alignment": "left",
+      "segments": [
+        {
+          "properties": {
+            "always_enabled": true,
+            "cache_duration": "none"
+          },
+          "template": "❯ ",
+          "foreground": "#4CAF50",
+          "type": "status",
+          "style": "plain",
+          "foreground_templates": [
+            "{{ if gt .Code 0 }}#F44336{{ end }}"
+          ]
+        }
+      ],
+      "newline": true
+    }
+  ],
+  "version": 3
 }
