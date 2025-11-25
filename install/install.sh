@@ -136,6 +136,83 @@ install_addons() {
     fi
 }
 
+# Function to install Node.js via NVM
+install_node() {
+    echo ""
+    echo "📦 Node.js Installation (via NVM)"
+    echo "This will install NVM, Node.js (LTS), and NPM."
+    
+    while true; do
+        if [[ -t 0 ]]; then
+            read -p "Do you want to install Node.js environment? (y/n): " install_choice
+        else
+            read -p "Do you want to install Node.js environment? (y/n): " install_choice < /dev/tty
+        fi
+        case $install_choice in
+            [Yy]* ) break;;
+            [Nn]* ) return;;
+            * ) echo "Please answer yes or no.";;
+        esac
+    done
+
+    # Install NVM if not installed
+    if [ -z "$NVM_DIR" ] && [ ! -d "$HOME/.nvm" ]; then
+        echo "🔧 Installing NVM..."
+        curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
+        
+        export NVM_DIR="$HOME/.nvm"
+        [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+    else
+        echo "ℹ️ NVM already installed"
+        export NVM_DIR="$HOME/.nvm"
+        [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+    fi
+
+    # Install Node.js LTS
+    echo "🔧 Installing Node.js LTS..."
+    nvm install --lts
+    nvm use --lts
+    nvm alias default lts/*
+    
+    echo "✅ Node.js $(node -v) and NPM $(npm -v) installed"
+}
+
+# Function to configure .zshrc
+configure_zshrc() {
+    echo ""
+    echo "⚙️ Shell Configuration"
+    echo "Do you want to configure .zshrc to automatically source the Chuya profile?"
+    
+    while true; do
+        if [[ -t 0 ]]; then
+            read -p "Configure .zshrc? (y/n): " config_choice
+        else
+            read -p "Configure .zshrc? (y/n): " config_choice < /dev/tty
+        fi
+        case $config_choice in
+            [Yy]* ) break;;
+            [Nn]* ) echo "Skipping .zshrc configuration."; return;;
+            * ) echo "Please answer yes or no.";;
+        esac
+    done
+
+    echo "⚙️ Configuring zsh profile..."
+    SOURCE_LINE=". \"$PROFILE_SOURCE_PATH\""
+    
+    if [[ ! -f "$ZSHRC" ]]; then
+        touch "$ZSHRC"
+    fi
+    
+    if ! grep -Fq "$SOURCE_LINE" "$ZSHRC"; then
+        echo "" >> "$ZSHRC"
+        echo "# Chuya configuration" >> "$ZSHRC"
+        echo "$SOURCE_LINE" >> "$ZSHRC"
+        echo "✅ Source line added to $ZSHRC"
+    else
+        echo "ℹ️ Source line already present in $ZSHRC"
+    fi
+}
+
 # Install shell-specific plugins if using zsh
 if [[ "$SHELL_NAME" == "zsh" ]]; then
     echo "🔧 Setting up Zsh plugins..."
@@ -166,6 +243,9 @@ if [[ "$SHELL_NAME" == "zsh" ]]; then
 
     # Ask to install addons
     install_addons
+
+    # Ask to install Node.js
+    install_node
 fi
 
 if [[ "$USE_GIT" == "true" ]]; then
@@ -187,22 +267,8 @@ if [[ "$USE_GIT" == "true" ]]; then
         git clone https://github.com/AT-Lorlando/.chuya.git "$CHUYA_DIR"
     fi
     
-    # Add source line to shell config
-    echo "⚙️ Configuring zsh profile..."
-    SOURCE_LINE=". \"$PROFILE_SOURCE_PATH\""
-    
-    if [[ ! -f "$ZSHRC" ]]; then
-        touch "$ZSHRC"
-    fi
-    
-    if ! grep -Fq "$SOURCE_LINE" "$ZSHRC"; then
-        echo "" >> "$ZSHRC"
-        echo "# Chuya configuration" >> "$ZSHRC"
-        echo "$SOURCE_LINE" >> "$ZSHRC"
-        echo "✅ Source line added to $ZSHRC"
-    else
-        echo "ℹ️ Source line already present in $ZSHRC"
-    fi
+    # Configure .zshrc
+    configure_zshrc
     
 else
     echo "📥 Using manual download method..."
@@ -210,6 +276,14 @@ else
     # Create directories
     echo "📁 Creating directories..."
     mkdir -p "$PROFILE_DIR"
+    
+    # Download addons.sh
+    echo "📄 Downloading addons.sh..."
+    if curl -sSL "https://raw.githubusercontent.com/AT-Lorlando/.chuya/main/zsh/addons.sh" -o "$PROFILE_DIR/addons.sh"; then
+        echo "✅ Addons configuration downloaded"
+    else
+        echo "⚠️ Failed to download addons.sh"
+    fi
     
     # Download and create the profile.sh file
     echo "📄 Downloading profile.sh..."
@@ -219,22 +293,8 @@ else
         echo "⚠️ Failed to download profile.sh"
     fi
     
-    # Add source line to shell config
-    echo "⚙️ Configuring zsh profile..."
-    SOURCE_LINE=". \"$PROFILE_SOURCE_PATH\""
-    
-    if [[ ! -f "$ZSHRC" ]]; then
-        touch "$ZSHRC"
-    fi
-    
-    if ! grep -Fq "$SOURCE_LINE" "$ZSHRC"; then
-        echo "" >> "$ZSHRC"
-        echo "# Chuya configuration" >> "$ZSHRC"
-        echo "$SOURCE_LINE" >> "$ZSHRC"
-        echo "✅ Source line added to $ZSHRC"
-    else
-        echo "ℹ️ Source line already present in $ZSHRC"
-    fi
+    # Configure .zshrc
+    configure_zshrc
 fi
 
 echo ""
