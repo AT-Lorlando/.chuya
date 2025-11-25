@@ -1,12 +1,12 @@
-# PowerShell install script for Oh My Posh (Chuya)
+# PowerShell install script for Chuya
 # Usage: Invoke-WebRequest -Uri "https://raw.githubusercontent.com/AT-Lorlando/.chuya/main/install/install.ps1" -OutFile install.ps1; .\install.ps1
 
 $ErrorActionPreference = 'Stop'
 
 # Ask user for installation method
-Write-Host "🎯 Chuya Oh My Posh Setup" -ForegroundColor Cyan
+Write-Host "🎯 Chuya Setup" -ForegroundColor Cyan
 Write-Host "Choose your installation method:" -ForegroundColor Yellow
-Write-Host "1. Git Clone (Recommended - keeps themes up to date)" -ForegroundColor Green
+Write-Host "1. Git Clone (Recommended - keeps configuration up to date)" -ForegroundColor Green
 Write-Host "2. Manual Download (Standalone installation)" -ForegroundColor White
 Write-Host ""
 
@@ -18,15 +18,10 @@ $useGit = $choice -eq "1"
 
 # Configuration
 $chuya_dir = "$HOME\.chuya"
-$themeDir = "$chuya_dir\oh-my-posh"
 $profileDir = "$chuya_dir\powershell"
 $profileSourcePath = "$profileDir\profile.ps1"
 $userProfilePath = $PROFILE
 
-if (-not (Get-Command oh-my-posh -ErrorAction SilentlyContinue)) {
-    Write-Host "🔧 Installing Oh My Posh via the official script..." -ForegroundColor Yellow
-    Invoke-Expression ((New-Object System.Net.WebClient).DownloadString('https://ohmyposh.dev/install.ps1'))
-}
 
 if ($useGit) {
     Write-Host "📦 Using Git installation method..." -ForegroundColor Green
@@ -57,7 +52,7 @@ if ($useGit) {
     
     $profileContent = Get-Content $userProfilePath -Raw -ErrorAction SilentlyContinue
     if (-not $profileContent -or $profileContent -notmatch [regex]::Escape($sourceLine)) {
-        Add-Content $userProfilePath "`n# Chuya Oh My Posh configuration`n$sourceLine`n"
+        Add-Content $userProfilePath "`n# Chuya configuration`n$sourceLine`n"
         Write-Host "✅ Source line added to $userProfilePath" -ForegroundColor Green
     } else {
         Write-Host "ℹ️ Source line already present in $userProfilePath" -ForegroundColor Yellow
@@ -68,34 +63,8 @@ if ($useGit) {
     
     # Create directories
     Write-Host "📁 Creating directories..."
-    if (-not (Test-Path $themeDir)) {
-        New-Item -ItemType Directory -Path $themeDir -Force | Out-Null
-    }
     if (-not (Test-Path $profileDir)) {
         New-Item -ItemType Directory -Path $profileDir -Force | Out-Null
-    }
-    
-    # Download themes
-    Write-Host "🌐 Downloading themes..."
-    $themes = @(
-        @{
-            name = "chuya.omp.json"
-            url = "https://raw.githubusercontent.com/AT-Lorlando/.chuya/main/oh-my-posh/chuya.omp.json"
-        },
-        @{
-            name = "pure.omp.json"
-            url = "https://raw.githubusercontent.com/AT-Lorlando/.chuya/main/oh-my-posh/pure.omp.json"
-        }
-    )
-    
-    foreach ($theme in $themes) {
-        $themePath = Join-Path $themeDir $theme.name
-        try {
-            Write-Host "  📄 Downloading $($theme.name)..."
-            Invoke-WebRequest -Uri $theme.url -OutFile $themePath -UseBasicParsing
-        } catch {
-            Write-Warning "⚠️ Failed to download $($theme.name): $($_.Exception.Message)"
-        }
     }
     
     # Download and create the profile.ps1 file
@@ -117,7 +86,7 @@ if ($useGit) {
     
     $profileContent = Get-Content $userProfilePath -Raw -ErrorAction SilentlyContinue
     if (-not $profileContent -or $profileContent -notmatch [regex]::Escape($sourceLine)) {
-        Add-Content $userProfilePath "`n# Chuya Oh My Posh configuration`n$sourceLine`n"
+        Add-Content $userProfilePath "`n# Chuya configuration`n$sourceLine`n"
         Write-Host "✅ Source line added to $userProfilePath" -ForegroundColor Green
     } else {
         Write-Host "ℹ️ Source line already present in $userProfilePath" -ForegroundColor Yellow
@@ -129,7 +98,7 @@ Write-Host "🎉 Installation complete!" -ForegroundColor Green
 Write-Host "🔄 Please restart PowerShell or run '. `$PROFILE' to apply changes." -ForegroundColor Cyan
 
 if ($useGit) {
-    Write-Host "📝 Git method: Your themes will stay updated with the repository." -ForegroundColor Green
+    Write-Host "📝 Git method: Your configuration will stay updated with the repository." -ForegroundColor Green
 } else {
-    Write-Host "📝 Manual method: To update themes, re-run this script." -ForegroundColor White
-} 
+    Write-Host "📝 Manual method: To update configuration, re-run this script." -ForegroundColor White
+}

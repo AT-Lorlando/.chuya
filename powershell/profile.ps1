@@ -12,21 +12,8 @@ try {
 
 if ($isAIAgent) {
     $PSStyle.OutputRendering = [System.Management.Automation.OutputRendering]::PlainText
-    
-    if (Get-Command oh-my-posh -ErrorAction SilentlyContinue) {
-        try {
-            oh-my-posh init pwsh --config '~\.chuya\oh-my-posh\pure.omp.json' | Invoke-Expression
-        } catch {
-            function prompt { "PS $($pwd.Path.Split('\')[-1])> " }
-        }
-    } else {
-        function prompt { "PS $($pwd.Path.Split('\')[-1])> " }
-    }
+    function prompt { "PS $($pwd.Path.Split('\')[-1])> " }
 } else {
-    if (Get-Command oh-my-posh -ErrorAction SilentlyContinue) {
-        oh-my-posh init pwsh --config '~\.chuya\oh-my-posh\chuya.omp.json' | Invoke-Expression
-    }
-
     Import-Module PSReadLine
     Set-PSReadLineOption -PredictionSource HistoryAndPlugin
     Set-PSReadLineOption -PredictionViewStyle ListView
@@ -51,16 +38,6 @@ if ($isAIAgent) {
             & "C:\Program Files\Git\bin\bash.exe" -c "nano '$bashPath'"
         } else {
             & "C:\Program Files\Git\bin\bash.exe" -c "nano"
-        }
-    }
-
-    function p {
-        param([string]$prf)
-        $path = "~\.chuya\oh-my-posh\$prf.omp.json"
-        if (Test-Path $path) {
-            oh-my-posh init pwsh --config $path | Invoke-Expression
-        } else {
-            Write-Host "Profile '$prf' not found"
         }
     }
 }

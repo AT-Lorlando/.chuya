@@ -1,12 +1,12 @@
 #!/bin/bash
 
-# Script d'installation pour Oh My Posh et Oh My Zsh (Chuya)
+# Script d'installation pour Oh My Zsh (Chuya)
 # Usage : curl -sSL https://raw.githubusercontent.com/AT-Lorlando/.chuya/main/install/install.sh | bash
 
 set -e  # Quitte en cas d'erreur
 
 # Ask user for installation method
-echo "🎯 Chuya Oh My Posh Setup"
+echo "🎯 Chuya Setup"
 echo "Choose your installation method:"
 echo "1. Git Clone (Recommended - keeps themes up to date)"
 echo "2. Manual Download (Standalone installation)"
@@ -28,24 +28,20 @@ USE_GIT=$([[ $choice == "1" ]] && echo "true" || echo "false")
 
 # Configuration
 CHUYA_DIR="$HOME/.chuya"
-THEME_DIR="$CHUYA_DIR/oh-my-posh"
 PROFILE_DIR="$CHUYA_DIR/zsh"
 PROFILE_SOURCE_PATH="$PROFILE_DIR/profile.sh"
 ZSHRC="$HOME/.zshrc"
 BASHRC="$HOME/.bashrc"
+SHELL_NAME=$(basename "$SHELL")
 
-# Detect current shell
+# Detect current shell for final message
 CURRENT_SHELL=$(basename "$SHELL")
 if [[ "$CURRENT_SHELL" == "zsh" ]]; then
     SHELL_CONFIG="$ZSHRC"
-    SHELL_NAME="zsh"
 elif [[ "$CURRENT_SHELL" == "bash" ]]; then
     SHELL_CONFIG="$BASHRC"
-    SHELL_NAME="bash"
 else
-    echo "⚠️ Unsupported shell: $CURRENT_SHELL. Defaulting to bash."
     SHELL_CONFIG="$BASHRC"
-    SHELL_NAME="bash"
 fi
 
 # Install dependencies if not installed
@@ -59,101 +55,86 @@ if [[ "$SHELL_NAME" == "zsh" ]] && ! command -v zsh >/dev/null 2>&1; then
     sudo apt update && sudo apt install -y zsh
 fi
 
-# Install Oh My Posh if not already installed
-if ! command -v oh-my-posh >/dev/null 2>&1; then
-    echo "🔧 Installation d'Oh My Posh via le script officiel..."
-    curl -s https://ohmyposh.dev/install.sh | bash -s
-    # Add Oh My Posh to PATH for current session
-    export PATH="$PATH:$HOME/.local/bin"
-fi
+echo "SHELL_NAME: $SHELL_NAME"
 
-if [[ "$USE_GIT" == "true" ]]; then
-    echo "📦 Using Git installation method..."
+# Function to install addons
+install_addons() {
+    echo ""
+    echo "📦 Addons Installation"
+    echo "This will install optional tools: lazygit, lazydocker, yazi, and eza."
     
-    # Check if git is available
-    if ! command -v git >/dev/null 2>&1; then
-        echo "❌ Git is not installed or not in PATH. Please install Git first or choose manual installation."
-        exit 1
-    fi
-    
-    # Clone the repository
-    echo "📥 Cloning .chuya repository..."
-    if [[ -d "$CHUYA_DIR" ]]; then
-        echo "📁 Directory $CHUYA_DIR already exists, updating..."
-        cd "$CHUYA_DIR"
-        git pull origin main
-    else
-        git clone https://github.com/AT-Lorlando/.chuya.git "$CHUYA_DIR"
-    fi
-    
-    # Add source line to shell config
-    echo "⚙️ Configuring $SHELL_NAME profile..."
-    SOURCE_LINE=". \"$PROFILE_SOURCE_PATH\""
-    
-    if [[ ! -f "$SHELL_CONFIG" ]]; then
-        touch "$SHELL_CONFIG"
-    fi
-    
-    if ! grep -Fq "$SOURCE_LINE" "$SHELL_CONFIG"; then
-        echo "" >> "$SHELL_CONFIG"
-        echo "# Chuya Oh My Posh configuration" >> "$SHELL_CONFIG"
-        echo "$SOURCE_LINE" >> "$SHELL_CONFIG"
-        echo "✅ Source line added to $SHELL_CONFIG"
-    else
-        echo "ℹ️ Source line already present in $SHELL_CONFIG"
-    fi
-    
-else
-    echo "📥 Using manual download method..."
-    
-    # Create directories
-    echo "📁 Creating directories..."
-    mkdir -p "$THEME_DIR"
-    mkdir -p "$PROFILE_DIR"
-    
-    # Download themes
-    echo "🌐 Downloading themes..."
-    themes=(
-        "chuya.omp.json:https://raw.githubusercontent.com/AT-Lorlando/.chuya/main/oh-my-posh/chuya.omp.json"
-        "pure.omp.json:https://raw.githubusercontent.com/AT-Lorlando/.chuya/main/oh-my-posh/pure.omp.json"
-    )
-    
-    for theme_info in "${themes[@]}"; do
-        IFS=':' read -r theme_name theme_url <<< "$theme_info"
-        theme_path="$THEME_DIR/$theme_name"
-        echo "  📄 Downloading $theme_name..."
-        if curl -sSL "$theme_url" -o "$theme_path"; then
-            echo "    ✅ Downloaded successfully"
+    while true; do
+        if [[ -t 0 ]]; then
+            read -p "Do you want to install these addons? (y/n): " install_choice
         else
-            echo "    ⚠️ Failed to download $theme_name"
+            read -p "Do you want to install these addons? (y/n): " install_choice < /dev/tty
         fi
+        case $install_choice in
+            [Yy]* ) break;;
+            [Nn]* ) return;;
+            * ) echo "Please answer yes or no.";;
+        esac
     done
-    
-    # Download and create the profile.sh file
-    echo "📄 Downloading profile.sh..."
-    if curl -sSL "https://raw.githubusercontent.com/AT-Lorlando/.chuya/main/zsh/profile.sh" -o "$PROFILE_SOURCE_PATH"; then
-        echo "✅ Profile downloaded successfully"
+
+    # Create bin directory if it doesn't exist
+    mkdir -p "$HOME/.local/bin"
+    export PATH="$HOME/.local/bin:$PATH"
+
+    # Install lazygit
+    if ! command -v lazygit >/dev/null 2>&1; then
+        echo "🔧 Installing lazygit..."
+        LAZYGIT_VERSION=$(curl -s "https://api.github.com/repos/jesseduffield/lazygit/releases/latest" | grep -Po '"tag_name": "v\K[^"]*')
+        curl -Lo lazygit.tar.gz "https://github.com/jesseduffield/lazygit/releases/latest/download/lazygit_${LAZYGIT_VERSION}_Linux_x86_64.tar.gz"
+        tar xf lazygit.tar.gz lazygit
+        install lazygit "$HOME/.local/bin"
+        rm lazygit lazygit.tar.gz
+        echo "✅ lazygit installed"
     else
-        echo "⚠️ Failed to download profile.sh"
+        echo "ℹ️ lazygit already installed"
     fi
-    
-    # Add source line to shell config
-    echo "⚙️ Configuring $SHELL_NAME profile..."
-    SOURCE_LINE=". \"$PROFILE_SOURCE_PATH\""
-    
-    if [[ ! -f "$SHELL_CONFIG" ]]; then
-        touch "$SHELL_CONFIG"
-    fi
-    
-    if ! grep -Fq "$SOURCE_LINE" "$SHELL_CONFIG"; then
-        echo "" >> "$SHELL_CONFIG"
-        echo "# Chuya Oh My Posh configuration" >> "$SHELL_CONFIG"
-        echo "$SOURCE_LINE" >> "$SHELL_CONFIG"
-        echo "✅ Source line added to $SHELL_CONFIG"
+
+    # Install lazydocker
+    if ! command -v lazydocker >/dev/null 2>&1; then
+        echo "🔧 Installing lazydocker..."
+        curl https://raw.githubusercontent.com/jesseduffield/lazydocker/master/scripts/install_update_linux.sh | bash
+        echo "✅ lazydocker installed"
     else
-        echo "ℹ️ Source line already present in $SHELL_CONFIG"
+        echo "ℹ️ lazydocker already installed"
     fi
-fi
+
+    # Install eza
+    if ! command -v eza >/dev/null 2>&1; then
+        echo "🔧 Installing eza..."
+        if command -v apt >/dev/null 2>&1; then
+            sudo mkdir -p /etc/apt/keyrings
+            wget -qO- https://raw.githubusercontent.com/eza-community/eza/main/deb.asc | sudo gpg --dearmor -o /etc/apt/keyrings/gierens.gpg
+            echo "deb [signed-by=/etc/apt/keyrings/gierens.gpg] http://deb.gierens.de stable main" | sudo tee /etc/apt/sources.list.d/gierens.list
+            sudo chmod 644 /etc/apt/keyrings/gierens.gpg /etc/apt/sources.list.d/gierens.list
+            sudo apt update
+            sudo apt install -y eza
+        else
+             # Fallback to binary download if apt is not available (simplified)
+             echo "⚠️ apt not found, skipping eza installation via apt. Please install manually."
+        fi
+    else
+        echo "ℹ️ eza already installed"
+    fi
+
+    # Install yazi
+    if ! command -v yazi >/dev/null 2>&1; then
+        echo "🔧 Installing yazi..."
+        # Yazi requires rust/cargo usually, but we can try to fetch a binary or use a script if available.
+        # Using a pre-built binary approach for simplicity if available, otherwise cargo.
+        if command -v cargo >/dev/null 2>&1; then
+            cargo install --locked yazi-fm
+            echo "✅ yazi installed via cargo"
+        else
+            echo "⚠️ cargo not found. Installing yazi requires Rust/Cargo. Skipping."
+        fi
+    else
+        echo "ℹ️ yazi already installed"
+    fi
+}
 
 # Install shell-specific plugins if using zsh
 if [[ "$SHELL_NAME" == "zsh" ]]; then
@@ -182,6 +163,78 @@ if [[ "$SHELL_NAME" == "zsh" ]]; then
             echo 'plugins=(git z zsh-autosuggestions zsh-syntax-highlighting)' >> "$ZSHRC"
         fi
     fi
+
+    # Ask to install addons
+    install_addons
+fi
+
+if [[ "$USE_GIT" == "true" ]]; then
+    echo "📦 Using Git installation method..."
+    
+    # Check if git is available
+    if ! command -v git >/dev/null 2>&1; then
+        echo "❌ Git is not installed or not in PATH. Please install Git first or choose manual installation."
+        exit 1
+    fi
+    
+    # Clone the repository
+    echo "📥 Cloning .chuya repository..."
+    if [[ -d "$CHUYA_DIR" ]]; then
+        echo "📁 Directory $CHUYA_DIR already exists, updating..."
+        cd "$CHUYA_DIR"
+        git pull origin main
+    else
+        git clone https://github.com/AT-Lorlando/.chuya.git "$CHUYA_DIR"
+    fi
+    
+    # Add source line to shell config
+    echo "⚙️ Configuring zsh profile..."
+    SOURCE_LINE=". \"$PROFILE_SOURCE_PATH\""
+    
+    if [[ ! -f "$ZSHRC" ]]; then
+        touch "$ZSHRC"
+    fi
+    
+    if ! grep -Fq "$SOURCE_LINE" "$ZSHRC"; then
+        echo "" >> "$ZSHRC"
+        echo "# Chuya configuration" >> "$ZSHRC"
+        echo "$SOURCE_LINE" >> "$ZSHRC"
+        echo "✅ Source line added to $ZSHRC"
+    else
+        echo "ℹ️ Source line already present in $ZSHRC"
+    fi
+    
+else
+    echo "📥 Using manual download method..."
+    
+    # Create directories
+    echo "📁 Creating directories..."
+    mkdir -p "$PROFILE_DIR"
+    
+    # Download and create the profile.sh file
+    echo "📄 Downloading profile.sh..."
+    if curl -sSL "https://raw.githubusercontent.com/AT-Lorlando/.chuya/main/zsh/profile.sh" -o "$PROFILE_SOURCE_PATH"; then
+        echo "✅ Profile downloaded successfully"
+    else
+        echo "⚠️ Failed to download profile.sh"
+    fi
+    
+    # Add source line to shell config
+    echo "⚙️ Configuring zsh profile..."
+    SOURCE_LINE=". \"$PROFILE_SOURCE_PATH\""
+    
+    if [[ ! -f "$ZSHRC" ]]; then
+        touch "$ZSHRC"
+    fi
+    
+    if ! grep -Fq "$SOURCE_LINE" "$ZSHRC"; then
+        echo "" >> "$ZSHRC"
+        echo "# Chuya configuration" >> "$ZSHRC"
+        echo "$SOURCE_LINE" >> "$ZSHRC"
+        echo "✅ Source line added to $ZSHRC"
+    else
+        echo "ℹ️ Source line already present in $ZSHRC"
+    fi
 fi
 
 echo ""
@@ -189,7 +242,7 @@ echo "🎉 Installation complete!"
 echo "🔄 Please restart your terminal or run 'source $SHELL_CONFIG' to apply changes."
 
 if [[ "$USE_GIT" == "true" ]]; then
-    echo "📝 Git method: Your themes will stay updated with the repository."
+    echo "📝 Git method: Your configuration will stay updated with the repository."
 else
-    echo "📝 Manual method: To update themes, re-run this script."
+    echo "📝 Manual method: To update configuration, re-run this script."
 fi
