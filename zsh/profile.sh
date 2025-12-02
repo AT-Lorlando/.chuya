@@ -64,7 +64,7 @@ alias ...='cd ../..'
 alias grep='grep --color=auto'
 alias fgrep='fgrep --color=auto'
 alias egrep='egrep --color=auto'
-alias nano='nano -l -i -m -E -T 4'
+alias nano='nano -l -i -E -T 4'
 # Git aliases
 alias gs='git status'
 alias ga='git add'
