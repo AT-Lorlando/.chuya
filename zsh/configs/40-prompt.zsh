@@ -1,5 +1,3 @@
-export PROMPT_LOAD=1
-
 # Custom prompt
 autoload -Uz vcs_info
 precmd() { vcs_info }
@@ -26,6 +24,6 @@ local prompt_color='%F{76}' # Green (#4CAF50)
 local error_color='%F{196}' # Red (#F44336)
 local reset_color='%f'
 
-PROMPT='qsdqsdqs${user_color}%n${reset_color}@%m${path_color} %~${reset_color}${git_color}${vcs_info_msg_0_}${reset_color}${python_color}$(python_info)${reset_color}
+PROMPT='${user_color}%n${reset_color}@%m${path_color} %~${reset_color}${git_color}${vcs_info_msg_0_}${reset_color}${python_color}$(python_info)${reset_color}
 %(?.${prompt_color}.${error_color})>${reset_color} '
 setopt prompt_subst
