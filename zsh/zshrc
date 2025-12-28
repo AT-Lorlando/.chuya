@@ -1,0 +1,38 @@
+#!/bin/zsh
+
+export ZSH="$HOME/.oh-my-zsh"
+ZSH_THEME="robbyrussell"
+
+# Prevent multiple executions of this profile
+if [ -n "$CHUYA_PROFILE_LOADED" ]; then
+    return
+fi
+
+# Source all shared configurations
+if [ -d "$HOME/.chuya/zsh/configs" ]; then
+    for config in "$HOME/.chuya/zsh/configs/"*.zsh(N); do
+        source "$config"
+    done
+fi
+
+# Source enabled optional configurations
+if [ -d "$HOME/.chuya/zsh/enabled" ]; then
+    for config in "$HOME/.chuya/zsh/enabled/"*.zsh(N); do
+        source "$config"
+    done
+fi
+
+# Source machine-specific configuration
+if [ -f "$HOME/.chuya/zsh/hosts/$HOST.zsh" ]; then
+    source "$HOME/.chuya/zsh/hosts/$HOST.zsh"
+elif [ -f "$HOME/.chuya/zsh/hosts/$(hostname).zsh" ]; then
+    source "$HOME/.chuya/zsh/hosts/$(hostname).zsh"
+fi
+
+# Source local overrides (not versioned)
+if [ -f "$HOME/.zshrc.local" ]; then
+    source "$HOME/.zshrc.local"
+fi
+
+export EDITOR="nano"
+export CHUYA_PROFILE_LOADED=1
