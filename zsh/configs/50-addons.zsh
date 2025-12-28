@@ -8,7 +8,7 @@ if command -v eza >/dev/null 2>&1; then
     alias ls='eza -lhF --icons --color'
     alias ll='eza -alhF --icons --color'
     alias la='eza -A --icons --color'
-    alias l='eza -CF --icons --color'
+    alias l='eza -F --icons --color'
     alias tree='eza --tree --icons --color -L 3'
 fi
 
