@@ -1,0 +1,236 @@
+@import url("/home/chuya/Ricing/actual_theme/colors-custom.css");
+
+/* =============================================================================
+ *
+ * Waybar configuration
+ *
+ * Configuration reference: https://github.com/Alexays/Waybar/wiki/Configuration
+ *
+ * =========================================================================== */
+
+
+/* -----------------------------------------------------------------------------
+ * Keyframes
+ * -------------------------------------------------------------------------- */
+
+@keyframes blink-warning {
+    70% {
+        color: @foreground;
+    }
+    to {
+        color: @foreground;
+        background-color: @color6;
+    }
+}
+
+@keyframes blink-critical {
+    70% {
+        color: @foreground;
+    }
+    to {
+        color: @foreground;
+        background-color: @color3;
+    }
+}
+
+
+/* -----------------------------------------------------------------------------
+ * Base styles
+ * -------------------------------------------------------------------------- */
+
+
+/* Reset all styles */
+
+* {
+    border: none;
+    border-radius: 0;
+    min-height: 0;
+    margin: 0;
+    padding: 0;
+    font-family: 'MesloLGS Nerd Font';
+}
+
+
+/* The whole bar */
+
+#waybar {
+    background: alpha(@background,0.90);
+    color: @foreground;
+    font-size: 14px;
+}
+
+
+/* Each module */
+
+#custom-logo,
+#custom-sync-theme,
+#battery,
+#clock,
+#cpu,
+#custom-keyboard-layout,
+#memory,
+#mode,
+#network,
+#pulseaudio,
+#temperature,
+#tray {
+    padding: 4px 7px;
+    margin: 0px 3px;
+    border-bottom: @foreground 2px solid;
+    border-color: @foreground;
+}
+
+
+/* -----------------------------------------------------------------------------
+ * Module styles
+ * -------------------------------------------------------------------------- */
+
+#battery {
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+    color: #00f040;
+    border-color: #00f040;
+}
+
+#battery.warning {
+    color: @color6;
+    border-color: @color6;
+}
+
+#battery.critical {
+    color: @color3;
+    border-color: @color3;
+}
+
+#battery.warning.discharging {
+    animation-name: blink-warning;
+    animation-duration: 3s;
+}
+
+#battery.critical.discharging {
+    animation-name: blink-critical;
+    animation-duration: 2s;
+}
+
+#clock {
+    font-weight: bold;
+}
+
+#cpu {
+    /* No styles */
+}
+
+#memory {
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+}
+
+#mode {
+    background: @color8;
+    border-top: 2px solid @foreground;
+    /* To compensate for the top border and still have vertical centering */
+    padding-bottom: 2px;
+}
+
+#network {
+    /* No styles */
+}
+
+#network.disconnected {
+    color: @color6;
+}
+
+#pulseaudio {
+    /* No styles */
+}
+
+#pulseaudio.muted {
+    /* No styles */
+}
+
+#custom-spotify {
+    color: @color13;
+}
+
+#cpu,
+#memory,
+#temperature {
+    color: #00f040;
+    border-color: #00f040;
+}
+
+#cpu.warning,
+#memory.warning,
+#temperature.warning {
+    color: #ff7a85;
+    border-color: #ff7a85;
+    animation-name: blink-warning;
+    animation-duration: 3s;
+}
+
+#cpu.critical,
+#memory.critical,
+#temperature.critical {
+    color: #eb4d4b;
+    border-color: #eb4d4b;
+    animation-name: blink-critical;
+    animation-duration: 2s;
+}
+
+#tray {
+    /* No styles */
+}
+
+#tray>.passive {
+    -gtk-icon-effect: dim;
+}
+
+#tray>.needs-attention {
+    -gtk-icon-effect: highlight;
+    background-color: #eb4d4b;
+}
+
+#window {
+    font-weight: bold;
+}
+
+#workspaces button {
+    border-top: 2px solid transparent;
+    /* To compensate for the top border and still have vertical centering */
+    padding-bottom: 2px;
+    padding-left: 10px;
+    padding-right: 10px;
+    color: @color8;
+}
+
+#workspaces button.focused {
+    border-color: @color4;
+    color: @foreground;
+    background-color: @color1;
+}
+
+#workspaces button.urgent {
+    border-color: #c9545d;
+    color: #c9545d;
+}
+
+#workspaces button:hover {
+    border-bottom: @color4 2px solid;
+}
+
+#custom-logo:hover,
+#custom-sync-theme:hover,
+#battery:hover,
+#clock:hover,
+#cpu:hover,
+#custom-keyboard-layout:hover,
+#memory:hover,
+#mode:hover,
+#network:hover,
+#pulseaudio:hover,
+#temperature:hover,
+#tray:hover {
+    border-color: @color4;
+}

@@ -1,0 +1,153 @@
+// =============================================================================
+//
+// Waybar configuration
+//
+// Configuration reference: https://github.com/Alexays/Waybar/wiki/Configuration
+//
+// =============================================================================
+
+{
+    // -------------------------------------------------------------------------
+    // Global configuration
+    // -------------------------------------------------------------------------
+
+    "layer": "top",
+
+    "position": "top",
+
+    // If height property would be not present, it'd be calculated dynamically
+    "height": 30,
+
+    "modules-left": [
+        "custom/logo",
+        "custom/sync-theme",
+    ],
+    "modules-center": ["hyprland/workspaces"],
+    "modules-right": [
+        "tray",
+        "memory",
+        "cpu",
+        "temperature",
+        "battery",
+        "clock#date",
+        "clock#time"
+    ],
+
+
+    // -------------------------------------------------------------------------
+    // Modules
+    // -------------------------------------------------------------------------
+
+    "custom/logo": {
+        "format": "", // Icon: linux
+    	"on-click": "hyprctl dispatch exec hyprlock"
+    },
+
+    "custom/sync-theme": {
+        "format": "",
+        "tooltip": false,
+        "on-click": "hyprctl dispatch exec /home/chuya/.local/bin/sync_themes.py &",
+        "interval": "once"
+    },
+
+    "hyprland/workspaces": {
+        "format": "{icon}",
+        "format-icons": {
+            "active": "", // Icon: circle
+            "default": "", // Icon: circle-o
+            "empty": "", // Icon: circle-o
+        },
+        "persistent-workspaces": {
+            "*": [1, 2, 3, 4, 5]
+        }
+    },
+
+    "battery": {
+        "interval": 10,
+        "states": {
+            "warning": 30,
+            "critical": 15
+        },
+        // Connected to AC
+        "format": " {icon} {capacity}%", // Icon: bolt
+        // Not connected to AC
+        "format-discharging": "{icon} {capacity}%",
+        "format-icons": [
+            "", // Icon: battery-full
+            "", // Icon: battery-three-quarters
+            "", // Icon: battery-half
+            "", // Icon: battery-quarter
+            "" // Icon: battery-empty
+        ],
+        "tooltip": true
+    },
+
+    "clock#time": {
+        "interval": 1,
+        "format": "{:%H:%M}",
+        "tooltip": false
+    },
+
+    "clock#date": {
+        "interval": 10,
+        "format": " {:%e/%m/%y}", // Icon: calendar-alt
+        "tooltip-format": "{:%e %B %Y}"
+    },
+
+    "cpu": {
+        "interval": 5,
+        "format": " {usage}%", // Icon: microchip
+        "states": {
+            "warning": 50,
+            "critical": 80
+        }
+    },
+
+    "memory": {
+        "interval": 5,
+        "format": " {}%", // Icon: memory
+        "states": {
+            "warning": 50,
+            "critical": 80
+        }
+    },
+
+    //"pulseaudio": {
+    //    //"scroll-step": 1,
+    //    "format": "{icon}  {volume}%",
+    //    "format-bluetooth": "{icon}  {volume}%",
+    //    "format-muted": "",
+    //    "format-icons": {
+    //        "headphones": "",
+    //        "handsfree": "",
+    //        "headset": "",
+    //        "phone": "",
+    //        "portable": "",
+    //        "car": "",
+    //        "default": ["", ""]
+    //    },
+    //    "on-click": "pavucontrol"
+    //},
+
+    "temperature": {
+        "thermal-zone": 6,
+        "warning-threshold": 50,
+        "critical-threshold": 70,
+        "interval": 5,
+        "format": "{icon} {temperatureC}°C",
+        "format-icons": [
+            "", // Icon: temperature-empty
+            "", // Icon: temperature-quarter
+            "", // Icon: temperature-half
+            "", // Icon: temperature-three-quarters
+            "" // Icon: temperature-full
+        ],
+        "tooltip": true
+    },
+
+    "tray": {
+        "icon-size": 21,
+        "spacing": 10
+    }
+
+}

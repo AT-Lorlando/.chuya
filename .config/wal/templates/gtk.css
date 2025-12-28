@@ -1,0 +1,21 @@
+@define-color bg_color {background};
+@define-color fg_color {foreground};
+@define-color accent_color {color4};
+
+window {{
+    background-color: @bg_color;
+    color: @fg_color;
+}}
+
+button {{
+    background-color: @accent_color;
+    color: @fg_color;
+}}
+entry, textview {{
+    background-color: @bg_color;
+    color: @fg_color;
+    border-color: @accent_color;
+}}
+scrolledwindow {{
+    background-color: @bg_color;
+}}

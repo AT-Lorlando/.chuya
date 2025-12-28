@@ -1,0 +1,21 @@
+* {{
+    background-color: {background};
+    color: {foreground};
+}}
+
+window, headerbar, button, entry, textview, scrolledwindow {{
+    background-color: {background};
+    color: {foreground};
+    border-color: {color4};
+}}
+
+/* Curseur */
+textview text, entry text {{
+    color: {foreground};
+}}
+
+/* Sélection */
+selection {{
+    background-color: {color4};
+    color: {foreground};
+}}
