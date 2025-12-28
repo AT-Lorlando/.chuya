@@ -15,6 +15,13 @@ python_info() {
     fi
 }
 
+# SSH session info
+ssh_info() {
+    if [[ -n "$SSH_CONNECTION" ]]; then
+        echo "-SSH "
+    fi
+}
+
 # Color definitions
 local user_color='%F{81}' # Light blue (#4FC3F7)
 local path_color='%F{white}' # White (#E6E6E6)
@@ -24,6 +31,6 @@ local prompt_color='%F{76}' # Green (#4CAF50)
 local error_color='%F{196}' # Red (#F44336)
 local reset_color='%f'
 
-PROMPT='${user_color}%n${reset_color}@%m${path_color} %~${reset_color}${git_color}${vcs_info_msg_0_}${reset_color}${python_color}$(python_info)${reset_color}
+PROMPT='${reset_color}${user_color}%n${reset_color}@%m$(ssh_info)${path_color} %~${reset_color}${git_color}${vcs_info_msg_0_}${reset_color}${python_color}$(python_info)${reset_color}
 %(?.${prompt_color}.${error_color})>${reset_color} '
 setopt prompt_subst
