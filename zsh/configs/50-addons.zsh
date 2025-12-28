@@ -1,13 +1,7 @@
 # Addons Aliases
-if command -v lazygit >/dev/null 2>&1; then
-    alias lg='lazygit'
-fi
-if command -v lazydocker >/dev/null 2>&1; then
-    alias ld='lazydocker'
-fi
-if command -v yazi >/dev/null 2>&1; then
-    alias ya='yazi'
-fi
+alias lg='lazygit'
+alias ya='yazi'
+alias ld='lazydocker'
 
 # Eza (modern ls replacement)
 if command -v eza >/dev/null 2>&1; then
