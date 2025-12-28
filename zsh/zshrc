@@ -1,12 +1,24 @@
 #!/bin/zsh
 
+# Path to your Oh My Zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
+
+# Set name of the theme to load
 ZSH_THEME="robbyrussell"
 
-# Prevent multiple executions of this profile
-if [ -n "$CHUYA_PROFILE_LOADED" ]; then
-    return
-fi
+# Plugins
+plugins=(
+    git
+    sudo
+    docker
+    docker-compose
+    z
+    zsh-syntax-highlighting
+    zsh-autosuggestions
+)
+
+# Initialize Oh My Zsh
+source $ZSH/oh-my-zsh.sh
 
 # Source all shared configurations
 if [ -d "$HOME/.chuya/zsh/configs" ]; then
