@@ -63,3 +63,10 @@ Ce fichier est ignoré par git et est chargé en dernier, permettant de surcharg
 - **lazydocker** : Interface terminal pour docker.
 - **eza** : Remplaçant moderne de `ls`.
 - **yazi** : Gestionnaire de fichiers terminal.
+
+## 📦 Installer les addons (lazygit, lazydocker, eza, yazi, etc.)
+
+- lazygit : https://github.com/jesseduffield/lazygit#installation
+- lazydocker : https://github.com/jesseduffield/lazydocker#installation
+- eza : https://github.com/eza-community/eza#installation
+- yazi : https://github.com/sxyazi/yazi#installation
