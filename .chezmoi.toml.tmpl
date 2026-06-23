@@ -1,0 +1,10 @@
+{{- $role := promptStringOnce . "role" "Machine role (desktop/server/wsl)" -}}
+
+encryption = "age"
+
+[age]
+    identity  = "~/.config/chezmoi/key.txt"
+    recipient = "age1mduwum3vjs08pavgv8pv98l8fwfekzx3mxj0sxtgctt6jt9zudwszl4xql"
+
+[data]
+    role = {{ $role | quote }}

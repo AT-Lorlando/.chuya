@@ -1,0 +1,271 @@
+@import url("colors-matugen.css");
+
+/* ── Keyframes ───────────────────────────────────────────────────────────── */
+
+@keyframes blink-warning {
+    70% { opacity: 1; }
+    to  { opacity: 0.4; }
+}
+
+@keyframes blink-critical {
+    70% { opacity: 1; }
+    to  { opacity: 0.25; }
+}
+
+@keyframes pulse-vpn {
+    0%   { opacity: 1; }
+    50%  { opacity: 0.6; }
+    100% { opacity: 1; }
+}
+
+/* ── Reset ───────────────────────────────────────────────────────────────── */
+
+* {
+    border: none;
+    border-radius: 0;
+    min-height: 0;
+    margin: 0;
+    padding: 0;
+    font-family: 'JetBrains Mono Nerd Font';
+    font-size: 13px;
+}
+
+/* ── Bar ─────────────────────────────────────────────────────────────────── */
+
+#waybar {
+    background: alpha(@background, 0.88);
+    color: @foreground;
+    border: 1px solid alpha(@outline_variant, 0.18);
+    border-radius: 14px;
+}
+
+/* ── Séparateur visuel ───────────────────────────────────────────────────── */
+
+#custom-separator {
+    color: alpha(@outline_variant, 0.3);
+    padding: 0 2px;
+    font-size: 11px;
+}
+
+/* ── Tous les modules (base) ─────────────────────────────────────────────── */
+
+#custom-logo,
+#custom-sync-theme,
+#clock,
+#custom-workspaces,
+#network,
+#custom-netspeed,
+#custom-vpn,
+#cpu,
+#memory,
+#temperature,
+#battery,
+#tray {
+    padding: 4px 10px;
+    margin: 4px 1px;
+}
+
+/* ── Left — logo & sync ──────────────────────────────────────────────────── */
+
+#custom-logo {
+    color: @primary;
+    font-size: 18px;
+    padding: 4px 12px;
+    border-radius: 8px;
+}
+
+#custom-logo:hover {
+    background: alpha(@primary, 0.15);
+}
+
+#custom-sync-theme {
+    color: @primary;
+    font-size: 15px;
+    padding: 4px 10px;
+    border-radius: 8px;
+}
+
+#custom-sync-theme:hover {
+    background: alpha(@primary, 0.15);
+}
+
+/* ── Horloge ─────────────────────────────────────────────────────────────── */
+
+#clock.time {
+    font-weight: bold;
+    font-size: 15px;
+    color: @foreground;
+    letter-spacing: 0.5px;
+}
+
+#clock.date {
+    color: @on_surface_variant;
+    font-size: 12px;
+    border-radius: 8px;
+}
+
+#clock.date:hover {
+    background: alpha(@primary, 0.10);
+}
+
+/* ── Workspaces (custom/workspaces) ──────────────────────────────────────── */
+
+#custom-workspaces {
+    /* margin: 0 1px; */
+    font-size: 12px;
+    font-family: 'JetBrains Mono Nerd Font';
+}
+
+#icons {
+    font-size: 8px;
+}
+
+/* ── Réseau ──────────────────────────────────────────────────────────────── */
+
+#network {
+    color: @primary;
+    border-radius: 8px 0 0 8px;
+    padding-right: 4px;
+    font-weight: 600;
+}
+
+#network.disconnected {
+    color: @error;
+}
+
+/* Vitesse réseau — collé à droite du nom wifi */
+#custom-netspeed {
+    color: alpha(@on_surface_variant, 0.8);
+    font-size: 11px;
+    border-radius: 0 8px 8px 0;
+    padding-left: 4px;
+}
+
+/* Classes selon ping */
+#custom-netspeed.ping-good { color: @tertiary; }
+#custom-netspeed.ping-ok   { color: @on_surface_variant; }
+#custom-netspeed.ping-slow { color: @secondary; }
+#custom-netspeed.ping-timeout { color: @error; opacity: 0.7; }
+
+#network:hover,
+#custom-netspeed:hover {
+    background: alpha(@primary, 0.10);
+}
+
+/* ── VPN ─────────────────────────────────────────────────────────────────── */
+
+#custom-vpn {
+    border-radius: 2px;
+    padding: 0px 12px;
+    font-weight: 600;
+    font-size: 12px;
+    transition: all 0.2s ease;
+}
+
+/* Rien d'actif → invisible */
+#custom-vpn.vpn-none {
+    opacity: 0;
+    min-width: 0;
+    padding: 0;
+}
+
+/* VPN système seul */
+#custom-vpn.vpn-sys {
+    color: @tertiary;
+    background: alpha(@tertiary, 0.12);
+    border: 1px solid alpha(@tertiary, 0.25);
+}
+
+/* Exegol seul */
+#custom-vpn.vpn-exegol {
+    color: @tertiary;
+    background: alpha(@secondary, 0.10);
+    border: 1px solid alpha(@secondary, 0.2);
+}
+
+/* Les deux actifs */
+#custom-vpn.vpn-both {
+    color: @tertiary;
+    background: alpha(@tertiary, 0.12);
+    border: 1px solid alpha(@tertiary, 0.3);
+}
+
+#custom-vpn:hover {
+    opacity: 0.85;
+}
+
+/* ── CPU / Mémoire / Température ─────────────────────────────────────────── */
+
+#cpu       { color: #89dceb; border-radius: 8px; }
+#memory    { color: #cba6f7; border-radius: 8px; }
+#temperature { color: #f9e2af; border-radius: 8px; }
+
+#cpu.warning,
+#memory.warning {
+    color: @secondary;
+    animation: blink-warning 3s linear infinite alternate;
+}
+
+#temperature.warning {
+    color: @secondary;
+    animation: blink-warning 3s linear infinite alternate;
+}
+
+#cpu.critical,
+#memory.critical,
+#temperature.critical {
+    color: @error;
+    animation: blink-critical 2s linear infinite alternate;
+}
+
+#cpu:hover,
+#memory:hover,
+#temperature:hover {
+    background: alpha(@primary, 0.10);
+}
+
+/* ── Batterie ────────────────────────────────────────────────────────────── */
+
+#battery {
+    border-radius: 8px;
+}
+
+#battery.charging,
+#battery.plugged {
+    color: #89dceb;
+}
+
+#battery.full,
+#battery.good {
+    color: @tertiary;
+}
+
+#battery.warning:not(.charging) {
+    color: @secondary;
+    animation: blink-warning 3s linear infinite alternate;
+}
+
+#battery.critical:not(.charging) {
+    color: @error;
+    animation: blink-critical 2s linear infinite alternate;
+}
+
+#battery:hover {
+    background: alpha(@primary, 0.10);
+}
+
+/* ── Tray ────────────────────────────────────────────────────────────────── */
+
+#tray {
+    border-radius: 8px;
+}
+
+#tray > .passive {
+    -gtk-icon-effect: dim;
+}
+
+#tray > .needs-attention {
+    -gtk-icon-effect: highlight;
+    background-color: @error;
+    border-radius: 6px;
+}

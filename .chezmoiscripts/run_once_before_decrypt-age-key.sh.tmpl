@@ -1,0 +1,11 @@
+#!/bin/sh
+# Bootstrap the age private key on a new machine from the passphrase-protected
+# copy committed in the repo. Runs once, before chezmoi decrypts any files.
+# No-op on the source machine (key already present) or if the bootstrap blob
+# is absent (set the key up manually in that case).
+if [ ! -f "${HOME}/.config/chezmoi/key.txt" ] && [ -f "{{ .chezmoi.sourceDir }}/key.txt.age" ]; then
+    mkdir -p "${HOME}/.config/chezmoi"
+    chezmoi age decrypt --output "${HOME}/.config/chezmoi/key.txt" \
+        --passphrase "{{ .chezmoi.sourceDir }}/key.txt.age"
+    chmod 600 "${HOME}/.config/chezmoi/key.txt"
+fi
