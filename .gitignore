@@ -1,2 +1,5 @@
-zsh/enabled/
+# chezmoi age private key must never be committed in plaintext
+key.txt
+
+# SDD controller scratch
 .superpowers/

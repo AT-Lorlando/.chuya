@@ -1,72 +1,68 @@
 # Chuya Dotfiles
 
-Configuration centralisée pour Zsh, compatible avec plusieurs machines.
+Configuration centralisée multi-machines, gérée avec [chezmoi](https://www.chezmoi.io/).
+Sélection des configs **par rôle** (`desktop` / `server` / `wsl`) et secrets
+chiffrés avec [age](https://age-encryption.org/).
 
-## 🚀 Installation
-
-### Méthode Recommandée (Git)
-Cette méthode permet de garder vos configurations à jour facilement.
-
-```bash
-curl -sSL https://raw.githubusercontent.com/AT-Lorlando/.chuya/main/install/install.sh | bash
-```
-Choisissez l'option **1** (Git Clone).
-
-### Méthode Manuelle
-Télécharge l'archive du dépôt sans utiliser git pour le versionning local.
+## 🚀 Installation (nouvelle machine)
 
 ```bash
-curl -sSL https://raw.githubusercontent.com/AT-Lorlando/.chuya/main/install/install.sh | bash
+sh -c "$(curl -fsLS get.chezmoi.io)" -- init --apply AT-Lorlando/.chuya
 ```
-Choisissez l'option **2** (Manual Download).
 
-## 📂 Structure
+chezmoi demande le **rôle** de la machine une seule fois, puis déploie les
+configs adaptées. Si des secrets sont présents, saisis la **passphrase age**
+pour débloquer la clé (voir _Secrets_).
 
-- **`zsh/configs/`** : Configurations partagées (chargées sur toutes les machines).
-    - `00-history.zsh` : Configuration de l'historique.
-    - `01-completion.zsh` : Autocomplétion.
-    - `10-aliases.zsh` : Alias communs.
-    - `20-git.zsh` : Alias Git.
-    - `30-keybindings.zsh` : Raccourcis clavier.
-    - `40-prompt.zsh` : Prompt personnalisé.
-    - `50-addons.zsh` : Outils externes (lazygit, eza, etc.).
-- **`zsh/hosts/`** : Configurations spécifiques à une machine.
-- **`zsh/zshrc`** : Point d'entrée principal (remplace votre `~/.zshrc`).
-- **`install/`** : Scripts d'installation.
+Mise à jour ultérieure :
 
-## ⚠️ Note Importante
-L'installation va **remplacer** votre fichier `~/.zshrc` actuel par un lien symbolique vers la configuration du dépôt.
-Une sauvegarde de votre ancien fichier sera créée automatiquement (ex: `~/.zshrc.pre-chuya-2024...`).
+```bash
+chezmoi update    # git pull + apply
+```
+
+## 📂 Structure (source chezmoi)
+
+- `dot_zshrc.tmpl` → `~/.zshrc`
+- `dot_config/zsh/{configs,optional}/` → modules zsh (optionnels gatés par rôle)
+- `dot_config/<app>/` → configs applicatives (hypr, kitty, waybar, rofi, ranger,
+  btop, atuin, lazygit, lazydocker, cava)
+- `dot_bashrc`, `dot_gitconfig`, `dot_config/git/` → shell/git de base
+- `dot_claude/` → config Claude Code (settings, CLAUDE.md, RTK.md)
+- `encrypted_dot_claude.json.age` → `~/.claude.json` (chiffré age)
+- `.chezmoi.toml.tmpl` → prompt du rôle + config chiffrement age
+- `.chezmoiignore` → sélection des fichiers par rôle + exclusions (générés,
+  backups, état runtime)
 
 ## ⚙️ Personnalisation
 
-### Configurations Partagées
-Ajoutez un fichier `.zsh` dans `~/.chuya/zsh/configs/`. Il sera automatiquement chargé sur toutes vos machines.
+### Ajouter un fichier
 
-### Configurations Spécifiques (Machine)
-Créez un fichier avec le nom de votre machine (hostname) dans `~/.chuya/zsh/hosts/`.
-Exemple : `~/.chuya/zsh/hosts/MonLaptop.zsh`.
-
-Pour connaître votre hostname :
 ```bash
-echo $HOST
-# ou
-hostname
+chezmoi add ~/.config/<app>/<file>      # versionner un fichier existant
+chezmoi add --encrypt ~/.un-secret      # versionner chiffré
+chezmoi edit ~/.zshrc                    # éditer la source
+chezmoi cd                               # aller dans le repo source
 ```
 
-### Surcharges Locales (Non versionnées)
-Pour des configurations privées ou temporaires qui ne doivent pas être synchronisées, utilisez le fichier `~/.zshrc.local`.
-Ce fichier est ignoré par git et est chargé en dernier, permettant de surcharger n'importe quelle configuration.
+Après édition : `chezmoi apply` (déploie) ou `chezmoi diff` (prévisualise).
 
-## 🛠️ Outils Inclus
-- **lazygit** : Interface terminal pour git.
-- **lazydocker** : Interface terminal pour docker.
-- **eza** : Remplaçant moderne de `ls`.
-- **yazi** : Gestionnaire de fichiers terminal.
+### Sélection par rôle
 
-## 📦 Installer les addons (lazygit, lazydocker, eza, yazi, etc.)
+Le rôle est choisi à l'`init` et stocké dans `~/.config/chezmoi/chezmoi.toml`.
+`.chezmoiignore` exclut les configs desktop (hypr, waybar, rofi, kitty, cava)
+sur les rôles `server` / `wsl`.
 
-- lazygit : https://github.com/jesseduffield/lazygit#installation
-- lazydocker : https://github.com/jesseduffield/lazydocker#installation
-- eza : https://github.com/eza-community/eza#installation
-- yazi : https://github.com/sxyazi/yazi#installation
+### Surcharges locales (non versionnées)
+
+`~/.zshrc.local` est chargé en dernier par `~/.zshrc` s'il existe — pour des
+réglages propres à une machine, hors versionnement.
+
+## 🔐 Secrets (age)
+
+Les fichiers sensibles sont chiffrés avec age. La clé privée vit dans
+`~/.config/chezmoi/key.txt` (jamais committée).
+
+Pour amorcer une **nouvelle machine**, une copie de la clé chiffrée par
+passphrase est committée (`key.txt.age`) ; le script
+`.chezmoiscripts/run_once_before_decrypt-age-key.sh.tmpl` la déchiffre au
+premier `apply` (saisie de la passphrase une fois).
