@@ -2,4 +2,9 @@ README.md
 docs/
 tests/
 install/
-.superpowers
+.superpowers/
+tools.md
+
+# Transient: old zsh/ layout kept on disk as a crutch for the live ~/.zshrc
+# symlink during migration. Removed once chezmoi owns ~/.zshrc.
+zsh/
