@@ -1,0 +1,4 @@
+{{- $role := promptStringOnce . "role" "Machine role (desktop/server/wsl)" -}}
+
+[data]
+    role = {{ $role | quote }}
