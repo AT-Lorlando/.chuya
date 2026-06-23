@@ -27,10 +27,10 @@
         "tray",
         "memory",
         "cpu",
-        "temperature",
-        "battery",
-        "clock#date",
-        "clock#time"
+        // "temperature",
+        // "battery",
+        // "clock#date",
+        // "clock#time"
     ],
 
 

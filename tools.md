@@ -7,6 +7,7 @@
 * **nwg-look** : Interface graphique pour personnaliser les thèmes GTK, icônes et curseurs sous Wayland.
 * **greetd** : Login manager pour Wayland.
 * **tuigreet** : Login manager pour Wayland.
+* **fprintd**: Capteur d'empreinte
 
 #### **Interface & Navigation**
 * **dunst** : Démon de notification léger et hautement personnalisable (gère l'affichage visuel des pop-ups).
