@@ -1,0 +1,157 @@
+{
+    "layer": "top",
+    "position": "top",
+    "height": 48,
+    "margin-top": 6,
+    "margin-left": 6,
+    "margin-right": 6,
+
+    "modules-left": [
+        "custom/logo",
+        "custom/sync-theme",
+        "custom/separator",
+        "clock#time",
+        "clock#date"
+    ],
+
+    "modules-center": [
+        "custom/workspaces"
+    ],
+
+    "modules-right": [
+        "tray",
+        "custom/netspeed",
+        "custom/separator",
+        "custom/vpn",
+        "custom/separator",
+        "network",
+        "custom/separator",
+        "cpu",
+        "memory",
+        "temperature",
+        "custom/separator",
+        "battery"
+    ],
+
+    "custom/logo": {
+        "format": "󰣇",
+        "on-click": "/home/chuya/Arch/Ricing/scripts/lock-screen.sh",
+        "tooltip": false
+    },
+
+    "custom/sync-theme": {
+        "format": "󰏘",
+        "tooltip-format": "Synchroniser le thème (matugen)",
+        "on-click": "hyprctl dispatch exec /home/chuya/.local/bin/sync_themes.py &",
+        "interval": "once"
+    },
+
+    "custom/separator": {
+        "format": " ",
+        "tooltip": false
+    },
+
+    "clock#time": {
+        "interval": 1,
+        "format": "{:%H:%M}",
+        "tooltip": false
+    },
+
+    "clock#date": {
+        "interval": 60,
+        "format": "󰸗 {:%e/%m/%y}",
+        "tooltip-format": "<big>{:%B %Y}</big>\n<tt><small>{calendar}</small></tt>"
+    },
+
+
+    "custom/workspaces": {
+        "exec": "/home/chuya/.local/bin/waybar-workspaces.py",
+        "return-type": "json",
+        "format": "{}",
+        "escape": false,
+        "tooltip": false,
+        "on-scroll-up": "hyprctl dispatch workspace -1",
+        "on-scroll-down": "hyprctl dispatch workspace +1"
+    },
+
+
+    "tray": {
+        "icon-size": 18,
+        "spacing": 8
+    },
+
+    "custom/vpn": {
+        "exec": "/home/chuya/Arch/Ricing/scripts/waybar-vpn.sh",
+        "return-type": "json",
+        "interval": 5,
+        "format": "{}",
+        "tooltip": true
+    },
+
+    "network": {
+        "max-length": 16,
+        "format-wifi": "{essid:.12}  {icon}",
+        "format-ethernet": "󰈀 Ethernet",
+        "format-disconnected": "󰤮 Off",
+        "format-icons": ["󰤟", "󰤢", "󰤥", "󰤨"],
+        "tooltip-format-wifi": "󰤨 {essid}\n{signalStrength}% signal\n IP : {ipaddr}\n GW : {gwaddr}",
+        "tooltip-format-ethernet": "󰈀 Ethernet\n IP : {ipaddr}",
+        "tooltip-format-disconnected": "Déconnecté",
+        "on-click": "/home/chuya/Arch/Ricing/scripts/toggle-wifi-panel.sh"
+    },
+    "custom/netspeed": {
+
+        "exec": "/home/chuya/Arch/Ricing/scripts/waybar-netspeed.sh",
+        "return-type": "json",
+        "interval": 3,
+        "format": "{}",
+        "tooltip": true
+    },
+
+    "cpu": {
+        "interval": 3,
+        "format": "󰘚 {usage}%",
+        "format-icons": ["▁", "▂", "▃", "▄", "▅", "▆", "▇", "█"],
+        "states": {
+            "warning": 50,
+            "critical": 85
+        },
+        "tooltip-format": "CPU: {usage}%\nLoad: {load}"
+    },
+
+    "memory": {
+        "interval": 5,
+        "format": "󰍛 {percentage}%",
+        "format-alt": "󰍛 {used:.1f}G/{total:.1f}G",
+        "states": {
+            "warning": 65,
+            "critical": 85
+        },
+        "tooltip-format": "RAM: {used:.2f}G / {total:.2f}G ({percentage}%)\nSwap: {swapUsed:.1f}G"
+    },
+
+    "temperature": {
+        "thermal-zone": 6,
+        "warning-threshold": 60,
+        "critical-threshold": 80,
+        "interval": 5,
+        "format": "{icon} {temperatureC}°C",
+        "format-icons": ["󰸁", "󰸁", "󰔏", "󰔏", "󰸂"],
+        "tooltip-format": "Température : {temperatureC}°C"
+    },
+
+    "battery": {
+        "interval": 10,
+        "states": {
+            "good": 75,
+            "warning": 25,
+            "critical": 10
+        },
+        "format": "{icon} {capacity}%",
+        "format-charging": "󱐋 {capacity}%",
+        "format-plugged": "󰚥 {capacity}%",
+        "format-full": "󰁹 {capacity}%",
+        "format-icons": ["󰂎", "󰁺", "󰁻", "󰁼", "󰁽", "󰁾", "󰁿", "󰂀", "󰂁", "󰂂", "󰁹"],
+        "tooltip-format": "Batterie: {capacity}%\n{timeTo}"
+    }
+}

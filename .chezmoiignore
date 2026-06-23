@@ -4,3 +4,23 @@ tests/
 install/
 .superpowers/
 tools.md
+
+# matugen / wal generated theme files (regenerated per-machine by the theming tool)
+*matugen*
+.config/hypr/hyprlock/colors.conf
+.config/rofi/wal-dark.rasi
+
+# backups and runtime state
+*.backup
+.config/atuin/atuin-receipt.json
+
+# --- Role gating: desktop-only configs (excluded on server/wsl) ---
+{{- if ne .role "desktop" }}
+.config/hypr
+.config/waybar
+.config/rofi
+.config/kitty
+.config/cava
+.config/zsh/optional/exegol.zsh
+.config/zsh/optional/android.zsh
+{{- end }}
